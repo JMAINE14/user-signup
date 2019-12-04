@@ -3,6 +3,18 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+def correct(inpt):
+    if len(inpt) < 3 or len(inpt) > 20:
+        return True
+    elif ' ' in inpt:
+        return True
+    return False
+
+def correct_email(inpt):
+    if '@' in inpt:
+        return True
+    return False
+
 @app.route("/", methods=['POST', 'GET'])
 def index():
     username_error = ''
@@ -17,44 +29,32 @@ def index():
         email = request.form['email']
 
 
-        if not username:
+        if correct(username) or not username:
             username_error = "Please enter valid username!"
+            username = ''
 
-        if not password:
+        if correct(password) or not password:
             password_error = "Please enter valid password"
+            password = ''
 
-        if not verify:
+        if password == verify_error:
             verify_error = "Please verify password"
+        else:
+            verify = ''
 
-        if not email:
+        if email == email_error:
             email_error = "Please enter valid email"
+        else:
+            email = ''
 
 
     return render_template('form.html', username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error)
 
-# @app.route("/login", methods=['POST', 'GET'])
-# def login():
-#     if request.method == 'POST':
-#         email = request.form['email']
-#         password = request.form['password']
-#         user = User.query.filter_by(email=email).first()
-#         if user and user.password == password:
-#             session['email'] = email
-#             flash("Logged in")
-#             return redirect('/')
-#         else:
-#             flash('Email/Password aint right, or user does not exist', 'error')
 
-#     return render_template('login.html')
-
-
-
-
-
-
-
-
-
+@app.route('/Welcome', methods=['GET'])
+def welcome():
+    username = request.args.get('username')
+    return render_template('base.html', username=username)
 
 
 
