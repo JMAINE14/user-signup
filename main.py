@@ -6,6 +6,9 @@ app.config['DEBUG'] = True
 @app.route("/", methods=['POST', 'GET'])
 def index():
     username_error = ''
+    password_error = ''
+    verify_error = ''
+    email_error = ''
 
     if request.method == 'POST':
         username = request.form['username']
@@ -17,10 +20,19 @@ def index():
         if not username:
             username_error = "Please enter valid username!"
 
+        if not password:
+            password_error = "Please enter valid password"
 
-    return render_template('form.html', username_error=username_error)
+        if not verify:
+            verify_error = "Please verify password"
 
-# @app.route("/login", methods=['POST'])
+        if not email:
+            email_error = "Please enter valid email"
+
+
+    return render_template('form.html', username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error)
+
+# @app.route("/login", methods=['POST', 'GET'])
 # def login():
 #     if request.method == 'POST':
 #         email = request.form['email']
