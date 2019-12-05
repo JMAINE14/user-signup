@@ -42,19 +42,22 @@ def index():
         else:
             verify = ''
 
-        if email == email_error:
-            email_error = "Please enter valid email"
-        else:
-            email = ''
+        if email == email_error and email != '':
+            email_error = "Invalid Email"     
+
+        if not username_error and not password_error and not verify_error and not email_error:
+            return render_template('welcome.html', username=username)
+
+    return render_template('form.html', username_error=username_error, password_error=password_error, 
+    verify_error=verify_error, email_error=email_error)
 
 
-    return render_template('form.html', username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error)
 
 
-@app.route('/Welcome', methods=['GET'])
+@app.route('/welcome', methods=['GET'])
 def welcome():
     username = request.args.get('username')
-    return render_template('base.html', username=username)
+    return render_template('welcome.html', username=username)
 
 
 
