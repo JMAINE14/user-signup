@@ -11,12 +11,14 @@ def correct(inpt):
     return False
 
 def correct_email(inpt):
-    if '@' in inpt:
+    if '@' in inpt and "." in inpt:
         return True
     return False
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
+    username = ''
+    email = ''
     username_error = ''
     password_error = ''
     verify_error = ''
@@ -34,22 +36,26 @@ def index():
             username = ''
 
         if correct(password) or not password:
-            password_error = "Please enter valid password"
+            password_error = "Please enter matching password"
             password = ''
-
-        if password == verify_error:
-            verify_error = "Please verify password"
         else:
-            verify = ''
+            if verify != password:
+                verify_error = "Please enter valid password"        
 
-        if email == email_error and email != '':
-            email_error = "Invalid Email"     
+        # if password == '':
+        #     password_error = "Please enter a password"
+
+        if email != '':
+            if email.count('@') != 1 or email.count('.') != 1:
+                email_error = "Invalid Email"
+
 
         if not username_error and not password_error and not verify_error and not email_error:
+            return redirect('/welcome?username={0}'.format(username))
             return render_template('welcome.html', username=username)
 
     return render_template('form.html', username_error=username_error, password_error=password_error, 
-    verify_error=verify_error, email_error=email_error)
+    verify_error=verify_error, email_error=email_error, username=username, email=email)
 
 
 
